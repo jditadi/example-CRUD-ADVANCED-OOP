@@ -1,0 +1,47 @@
+unit prjBykes.Model.Behaviors;
+
+interface
+
+uses
+System.sysUtils;
+
+type
+  TModelBehaviors = Class
+  private
+    procedure BehaviorException (Sender : TObject; E: Exception);
+  public
+
+    constructor Create;
+    destructor Destroy; override;
+
+  end;
+
+var
+ ModelBehaviors : TModelBehaviors;
+
+
+implementation
+
+
+
+{ TModelBehaviors }
+
+constructor TModelBehaviors.Create;
+begin
+
+end;
+
+destructor TModelBehaviors.Destroy;
+begin
+
+  inherited;
+end;
+
+initialization
+ModelBehaviors := TModelBehaviors.Create;
+
+finalization;
+ModelBehaviors.DisposeOf;
+
+
+end.

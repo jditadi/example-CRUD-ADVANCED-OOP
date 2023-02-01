@@ -1,0 +1,121 @@
+unit Model.Entities.Customer;
+
+
+
+interface
+
+uses
+Datasnap.DBClient,
+Data.DB,
+System.SysUtils, System.Classes;
+
+
+type
+TCustomer = class
+
+  private
+    F_customerID: Integer;
+    F_fname: string;
+    F_lname: string;
+    F_dbirth: tDateTime;
+    F_address: string;
+    F_addressl2: string;
+    F_dregister: tDateTime;
+
+    function getCustomerID: Integer;
+    function getFName: string;
+    function getLName: string;
+    function getDBirth: tdatetime;
+    function getAddress: string;
+    function getAddressl2: string;
+    function getDRegister: tdatetime;
+
+  public
+    constructor Create();
+    destructor  Destroy; override;
+
+    Property CustomerID: Integer read getCustomerID write F_customerID;
+    Property FName: String       read getFName      write F_fname;
+    Property LName: String       read getLName      write F_lname;
+    Property DBirth: tdatetime   read getDBirth     write F_dbirth;
+    Property Address: String     read getAddress    write F_address;
+    Property Addressl2: String   read getAddressl2     write F_addressl2;
+    Property DRegister: tdatetime   read getDRegister  write F_dregister;
+
+end;
+
+implementation
+{ TCategoria }
+
+constructor TCustomer.Create;
+begin
+
+end;
+
+destructor TCustomer.Destroy;
+begin
+
+  inherited;
+end;
+
+function TCustomer.getCustomerID: Integer;
+begin
+if F_CustomerID <=0 then
+    raise Exception.Create('informe o codigo do cliente');
+  Result := F_CustomerID;
+end;
+
+function TCustomer.getFName: string;
+begin
+  if trim(F_fname) = '' then
+    raise Exception.Create('informe o nome do cliente');
+
+  Result := F_fname;
+end;
+
+function TCustomer.getAddress: string;
+begin
+  if trim(F_address) = '' then
+    raise Exception.Create('informe o endereco');
+
+  Result := F_address;
+
+end;
+
+function TCustomer.getAddressl2: string;
+begin
+  Result := F_addressl2;
+
+end;
+
+function TCustomer.getLName: string;
+begin
+  if trim(F_lname) = '' then
+    raise Exception.Create('informe o sobrenome');
+
+  Result := F_lname;
+
+end;
+
+
+function TCustomer.getDBirth: tdatetime;
+begin
+//verificar
+//  if trim(F_lname) = '' then
+//    raise Exception.Create('informe o sobrenome');
+
+  Result := F_dbirth;
+
+end;
+
+function TCustomer.getDRegister: tdatetime;
+begin
+//verificar
+//  if trim(F_dregister) = '' then
+//    raise Exception.Create('informe o sobrenome');
+
+  Result := F_dregister;
+
+end;
+
+end.

@@ -1,0 +1,60 @@
+unit Model.Entities.Category;
+
+
+
+interface
+
+uses
+Datasnap.DBClient,
+Data.DB,
+System.SysUtils, System.Classes;
+
+
+type
+TCategoria = class
+
+  private
+    F_category: string;
+    F_categoryID: Integer;
+    function getCategory: string;
+    function getCategoryID: Integer;
+
+  public
+    constructor Create();
+    destructor  Destroy; override;
+
+    Property categoryID: Integer read  getCategoryID write F_categoryID;
+    Property category:   string  read  getCategory   write F_category;
+
+end;
+
+implementation
+{ TCategoria }
+
+constructor TCategoria.Create;
+begin
+
+end;
+
+destructor TCategoria.Destroy;
+begin
+
+  inherited;
+end;
+
+function TCategoria.getCategoria: string;
+begin
+  if trim(F_categoria) = '' then
+    raise Exception.Create('informe a descricao da categoria');
+
+  Result := F_categoria;
+end;
+
+function TCategoria.getCategoriaID: Integer;
+begin
+if F_categoriaID <=0 then
+    raise Exception.Create('informe o codigo da categoria');
+  Result := F_categoriaID;
+end;
+
+end.

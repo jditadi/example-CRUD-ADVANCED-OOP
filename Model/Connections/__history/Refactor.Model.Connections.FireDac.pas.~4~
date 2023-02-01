@@ -1,0 +1,80 @@
+unit Refactor.Model.Connections.FireDac;
+
+interface
+
+uses
+Data.DB,
+System.SysUtils,
+FireDAC.DatS,
+FireDAC.DApt.Intf,
+FireDAC.DApt,
+FireDAC.Comp.DataSet,
+FireDAC.Stan.Intf,
+FireDAC.Stan.Option,
+FireDAC.Stan.Error,
+FireDAC.UI.Intf,
+FireDAC.Phys.Intf,
+FireDAC.Stan.Def,
+FireDAC.Stan.Pool,
+FireDAC.Stan.Async,
+FireDAC.Phys,
+FireDAC.Phys.FB,
+FireDAC.Phys.FBDef,
+FireDAC.VCLUI.Wait,
+FireDAC.Comp.Client;
+
+
+type
+TModelComponentsConnectionsFireDac = class
+  private
+    FConnection :TFDConnection;
+    FQuery :TFDQuery;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function Dataset: TDataset;
+
+
+
+
+end;
+
+implementation
+
+{ TModelComponentsConnectionsFireDac }
+
+
+constructor TModelComponentsConnectionsFireDac.Create;
+begin
+FConnection := TFDConnection.Create(nil);
+FQuery      := TFDQuery.Create(nil);
+FQuery.Connection := FConnection;
+
+FConnection.Params.DriverID := 'FB';
+FConnection.Params.Database := 'C:\WORK\WORK\DELPHI10\PROJECTS\REFATORACAO\TESTES\CATEGORIA.FDB';
+FConnection.Params.UserName := 'SYSDBA';
+FConnection.Params.Password := 'masterkey';
+FConnection.Params.Add('LockingMode=Normal');
+FConnection.Params.Add('Server=127.0.0.1');
+FConnection.Params.Add('Port=3050');
+FConnection.Connected := true;
+
+end;
+
+function TModelComponentsConnectionsFireDac.Dataset: TDataset;
+begin
+Result := FQuery;
+
+end;
+
+destructor TModelComponentsConnectionsFireDac.Destroy;
+begin
+//  FQuery.DisposeOf;
+//  FConnection.DisposeOf;
+  inherited;
+end;
+
+
+
+end.

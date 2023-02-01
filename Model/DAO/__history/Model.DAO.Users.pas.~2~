@@ -1,0 +1,102 @@
+unit Model.DAO.Users;
+
+interface
+
+uses
+
+Data.DB,
+System.SysUtils,
+Model.Connections.FireDac,
+Model.Connections.Interfaces,
+Model.DAO.Interfaces,
+Model.Entities.Users;
+
+
+type
+TModelDAOUsers = class(TInterfacedObject, iModelDaoEntity<TUsers>)
+
+  private
+  oConnection : iModelComponentsConnections;
+
+  FDataSet : TDatasource;
+  oEntity : TUsers;
+
+  public
+
+  constructor Create;
+  destructor Destroy; override;
+
+  function Get(currentIndex: String): iModelDaoEntity<TUsers>;
+  function Select(currentIndex: String; editField: String): iModelDaoEntity<TUsers>;
+  function Insert: iModelDaoEntity<TUsers>;
+  function Update: iModelDaoEntity<TUsers>;
+  function Delete: iModelDaoEntity<TUsers>;
+  function DataSet(aValue :TDatasource):iModelDaoEntity<TUsers>;
+  function This: TUsers;
+  class function New :iModelDaoEntity<TUsers>;
+
+  end;
+implementation
+
+uses
+  Vcl.Dialogs;
+
+
+{ TModelDAOUsers }
+
+constructor TModelDAOUsers.Create;
+begin
+oEntity := TUsers.Create;
+oConnection := TModelComponentsConnectionsFireDac.New;
+end;
+
+function TModelDAOUsers.DataSet(aValue: TDatasource): iModelDaoEntity<TUsers>;
+begin
+Result := Self;
+FDataset := aValue;
+FDataset.DataSet := oConnection.DatasetQry;
+end;
+
+function TModelDAOUsers.Delete: iModelDaoEntity<TUsers>;
+begin
+
+end;
+
+destructor TModelDAOUsers.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelDAOUsers.Get(currentIndex: String): iModelDaoEntity<TUsers>;
+begin
+
+end;
+
+function TModelDAOUsers.Insert: iModelDaoEntity<TUsers>;
+begin
+
+end;
+
+class function TModelDAOUsers.New: iModelDaoEntity<TUsers>;
+begin
+
+end;
+
+function TModelDAOUsers.Select(currentIndex,
+  editField: String): iModelDaoEntity<TUsers>;
+begin
+
+end;
+
+function TModelDAOUsers.This: TUsers;
+begin
+
+end;
+
+function TModelDAOUsers.Update: iModelDaoEntity<TUsers>;
+begin
+
+end;
+
+end.

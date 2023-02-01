@@ -1,0 +1,156 @@
+unit uRegCategory;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.Imaging.jpeg,
+  Vcl.ExtCtrls, Vcl.Controls, Vcl.Dialogs, Vcl.Forms,
+  Vcl.Mask, Vcl.ComCtrls, Vcl.DBCtrls,
+
+  Data.DB,
+  uInheritance,
+  eNum,
+
+  Model.Connections.FireDac,
+  Model.DAO.Category,
+  Model.Entities.Category,
+  Model.DAO.Interfaces,
+
+  FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
+
+type
+  TfrmRegCategory = class(TfrmInheritance)
+    procedure FormCreate(Sender: TObject);
+    procedure btnUpdateClick(Sender: TObject);
+    procedure btnNewClick(Sender: TObject);
+    procedure gridDblClick(Sender: TObject);
+    procedure gridTitleClick(Column: TColumn);
+    procedure edtSearchChange(Sender: TObject);
+
+  private
+
+    { Private declarations }
+        oDAO : iModelDaoEntity<TCategory>;
+
+  public
+    { Public declarations }
+    currentIndex : string;
+    function Save(estateRegister:TEstateRegister):Boolean; override;
+    function Delete:Boolean; override;
+
+  end;
+
+var
+  frmRegCategory: TfrmRegCategory;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TfrmRegCategory.btnNewClick(Sender: TObject);
+begin
+  inherited;
+
+  oDAO.Get(currentIndex);
+  edtID.Text := IntToStr(DataSource.DataSet.FieldByName('categoryID').AsInteger+1);
+  edtDescription.SetFocus;
+
+end;
+
+procedure TfrmRegCategory.btnUpdateClick(Sender: TObject);
+begin
+  inherited;
+
+  edtID.Text          := intToStr(DataSource.Dataset.FieldByName('categoryID').asInteger);
+  edtDescription.Text := DataSource.Dataset.FieldByName('description').asString;
+  edtDescription.setFocus;
+
+end;
+
+
+function TfrmRegCategory.Delete: Boolean;
+begin
+
+  if messageDlg('Delete Record?', mtConfirmation, [mbYes,mbNo], 0, mbNo) = mrYes then
+  begin
+
+  oDAO.This.categoryID := DataSource.Dataset.FieldByName('categoryID').asInteger;
+
+  oDAO
+  .Delete
+  .Get(currentIndex);
+
+  end;
+
+
+end;
+
+procedure TfrmRegCategory.edtSearchChange(Sender: TObject);
+begin
+  inherited;
+
+  oDao.Select(currentIndex, edtSearch.Text);
+end;
+
+procedure TfrmRegCategory.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+  oDao := TModelDAOCategory.New.Dataset(DataSource);
+  oDAO.Get(currentIndex);
+
+
+
+end;
+
+
+procedure TfrmRegCategory.gridDblClick(Sender: TObject);
+begin
+  inherited;
+
+  edtDescription.Text := dataSource.DataSet.FieldByName('Description').asString;
+  edtID.Text          := intToStr(dataSource.DataSet.FieldByName('CategoryID').asInteger);
+
+end;
+
+procedure TfrmRegCategory.gridTitleClick(Column: TColumn);
+begin
+  inherited;
+
+  currentIndex := column.FieldName;
+  lblSearch.Caption := column.Title.Caption;
+
+  oDAO.get(currentIndex);
+
+end;
+
+function TfrmRegCategory.Save(estateRegister: TEstateRegister): Boolean;
+begin
+
+  oDAO.This.categoryID := strtoInt(edtID.Text);
+  oDAO.This.category   := edtDescription.Text;
+
+  if (estateRegister = erNew) then
+     begin
+      if messageDlg('Insert Record?', mtConfirmation, [mbYes,mbNo], 0, mbYes) = mrYes then
+      oDAO.Insert;
+
+     end
+  else if (estateRegister = erUpdate) then
+     begin
+      if messageDlg('Update Record?', mtConfirmation, [mbYes,mbNo], 0, mbNo) = mrYes then
+      oDAO.Update;
+
+     end;
+
+  oDAO.Get(currentIndex);
+
+
+end;
+
+end.

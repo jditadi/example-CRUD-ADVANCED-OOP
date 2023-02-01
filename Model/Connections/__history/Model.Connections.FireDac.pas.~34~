@@ -1,0 +1,154 @@
+unit Model.Connections.FireDac;
+
+interface
+
+uses
+Data.DB,
+System.SysUtils,
+System.Classes,
+FireDAC.DatS,
+FireDAC.DApt.Intf,
+FireDAC.DApt,
+FireDAC.Comp.DataSet,
+FireDAC.Stan.Intf,
+FireDAC.Stan.Option,
+FireDAC.Stan.Error,
+FireDAC.UI.Intf,
+FireDAC.Phys.Intf,
+FireDAC.Stan.Def,
+FireDAC.Stan.Pool,
+FireDAC.Stan.Async,
+FireDAC.Phys,
+FireDAC.Phys.FB,
+FireDAC.Phys.FBDef,
+FireDAC.VCLUI.Wait,
+FireDAC.Comp.Client,
+Model.Connections.Interfaces;
+
+type
+TModelComponentsConnectionsFireDac = class(TInterfacedObject, iModelComponentsConnections)
+  private
+    FConnection :TFDConnection;
+    FQuery :TFDQuery;
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New : iModelComponentsConnections;
+
+    function DatasetQry: TDataset;
+    procedure qryIndex(currentIndex:string);
+
+    function Active (aValue :boolean):iModelComponentsConnections;
+    function ExecSQL  :iModelComponentsConnections;
+    function SQLAdd (aValue :String) :iModelComponentsConnections;
+    function SQLClear :iModelComponentsConnections;
+    function SQLOpen  :iModelComponentsConnections;
+    function SQLParam (aParam :String; aValue :Variant ) :iModelComponentsConnections; overload;
+    function SQLParam (aParam :String; aValue :TPersistent ) :iModelComponentsConnections; overload; //// to bitmap fields in tables
+
+end;
+
+implementation
+
+{ TModelComponentsConnectionsFireDac }
+
+
+constructor TModelComponentsConnectionsFireDac.Create;
+begin
+FConnection := TFDConnection.Create(nil);
+FQuery      := TFDQuery.Create(nil);
+FQuery.Connection := FConnection;
+
+FConnection.Params.DriverID := 'FB';
+FConnection.Params.Database := 'C:\WORK\WORK\DELPHI10\PROJECTS\CRUD_LinkdIN\Model\Connections\DataBykes.FDB';
+FConnection.Params.UserName := 'SYSDBA';
+FConnection.Params.Password := 'masterkey';
+FConnection.Params.Add('LockingMode=Normal');
+FConnection.Params.Add('Server=127.0.0.1');
+FConnection.Params.Add('Port=3050');
+FConnection.Connected := true;
+end;
+
+destructor TModelComponentsConnectionsFireDac.Destroy;
+begin
+  inherited;
+  FQuery.DisposeOf;
+  FConnection.DisposeOf;
+
+end;
+
+class function TModelComponentsConnectionsFireDac.New: iModelComponentsConnections;
+begin
+Result := Self.Create;
+end;
+
+procedure TModelComponentsConnectionsFireDac.qryIndex(currentIndex: string);
+begin
+ FQuery.IndexFieldNames(currentIndex);
+end;
+
+function TModelComponentsConnectionsFireDac.SQLAdd(
+  aValue: String): iModelComponentsConnections;
+begin
+ Result := Self;
+ FQuery.SQL.Add(aValue);
+
+end;
+
+function TModelComponentsConnectionsFireDac.DatasetQry: TDataset;
+begin
+Result := FQuery;
+
+end;
+
+
+function TModelComponentsConnectionsFireDac.Active(
+  aValue: boolean): iModelComponentsConnections;
+begin
+ Result := Self;
+ FQuery.Active := aValue;
+
+end;
+
+function TModelComponentsConnectionsFireDac.ExecSQL: iModelComponentsConnections;
+begin
+ Result := Self;
+ FQuery.ExecSQL;
+
+end;
+
+
+
+
+function TModelComponentsConnectionsFireDac.SQLClear: iModelComponentsConnections;
+begin
+Result := Self;
+  FQuery.SQL.Clear;
+end;
+
+function TModelComponentsConnectionsFireDac.SQLOpen: iModelComponentsConnections;
+begin
+Result := Self;
+  FQuery.Open;
+
+end;
+
+function TModelComponentsConnectionsFireDac.SQLParam(aParam: String;
+  aValue: TPersistent): iModelComponentsConnections;
+begin
+Result := Self;
+FQuery.ParamByName(aParam).Assign(aValue);  //// to bitmap fields in tables
+
+end;
+
+function TModelComponentsConnectionsFireDac.SQLParam(aParam: String;
+  aValue: Variant): iModelComponentsConnections;
+begin
+Result := Self;
+FQuery.ParamByName(aParam).Value := aValue;
+
+end;
+
+
+end.

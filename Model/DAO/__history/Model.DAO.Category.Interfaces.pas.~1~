@@ -1,0 +1,7 @@
+unit Model.DAO.Category.Interfaces;
+
+interface
+
+implementation
+
+end.

@@ -1,0 +1,215 @@
+unit Model.DAO.SaleItem;
+
+// Data Access Object -> DAO
+
+interface
+
+uses
+
+Data.DB,
+Datasnap.DBClient,
+System.SysUtils,
+Model.Connections.FireDac,
+Model.Connections.Interfaces,
+Model.Entities.SalesItems,
+Model.DAO.Interfaces,
+
+eNum;
+
+
+type
+TModelDAOSaleItem = class(TInterfacedObject, iModelDaoEntity<TSaleItem>)
+
+  private
+  oConnection : iModelComponentsConnections;
+
+  FDataSet : TDatasource;
+  oEntity : TSaleItem;
+  FCds : TClientDataset;
+
+//  function inNot(pValue: TClientDataset): String;
+
+  public
+
+  constructor Create;
+  destructor Destroy; override;
+  function GetGen: iModelDaoEntity<TSaleItem>;
+
+  function Get(currentIndex: String): iModelDaoEntity<TSaleItem>;
+
+  function Select(currentIndex: String; editField: String): iModelDaoEntity<TSaleItem>;
+
+  function Insert: iModelDaoEntity<TSaleItem>;
+  function Update: iModelDaoEntity<TSaleItem>;
+  function Delete: iModelDaoEntity<TSaleItem>;
+  function DataSet(aValue :TDatasource):iModelDaoEntity<TSaleItem>;
+  function This: TSaleItem;
+  class function New :iModelDaoEntity<TSaleItem>;
+
+
+  end;
+
+
+
+
+
+implementation
+
+uses
+  Vcl.Dialogs;
+
+
+{ TModelDAOdescription }
+
+constructor TModelDAOSaleItem.Create;
+begin
+oConnection := TModelComponentsConnectionsFireDac.New;
+oEntity := TSaleItem.Create;
+
+
+end;
+
+function TModelDAOSaleItem.DataSet(aValue: TDatasource): iModelDaoEntity<TSaleItem>;
+begin
+
+Result := Self;
+FDataset := aValue;
+FDataset.DataSet := oConnection.DatasetQry;
+
+end;
+
+function TModelDAOSaleItem.Delete: iModelDaoEntity<TSaleItem>;
+begin
+Result := Self;
+
+ try
+
+     oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('DELETE FROM items WHERE saleID = :SaleID and productID NOT IN (:ItemsToDel)')
+        .SQLParam('ItemsToDel', oEntity.ItemsToDel)
+        .SQLParam('SaleID', oEntity.SaleID)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao deletar items:' + ex.message);
+     end;
+end;
+
+
+destructor TModelDAOSaleItem.Destroy;
+begin
+  inherited;
+
+  oEntity.disposeOf;
+end;
+
+function TModelDAOSaleItem.Get(currentIndex: String): iModelDaoEntity<TSaleItem>;
+begin
+Result := Self;
+
+    try
+
+    oConnection
+
+        .Active(false)
+        .SQLClear
+        .SQLAdd('SELECT * FROM items WHERE saleID = :saleID ORDER BY productID')
+        .SQLParam('SaleID', strToInt(currentIndex))
+        .SQLOpen;
+
+//      if currentIndex<>'' then
+//      oConnection.qryIndex(currentIndex);
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao abrir lista de registros:' + ex.message);
+
+     end;
+
+
+end;
+
+function TModelDAOSaleItem.GetGen: iModelDaoEntity<TSaleItem>;
+begin
+
+
+end;
+
+function TModelDAOSaleItem.Insert: iModelDaoEntity<TSaleItem>;
+begin
+Result := Self;
+
+try
+
+//      if not oConnection.DatasetQry.Locate('SaleID;ProductID',VarArrayOf([pSaleID,vProductID]) , []) then
+
+
+    oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('INSERT INTO items (SaleID,productID,Price,Quant,TotalItems) ' +
+                ' VALUES (:SaleID,:productID,:Price,:Quant,:TotalItems)')
+
+        .SQLParam('SaleID', oEntity.SaleID)
+        .SQLParam('productID', oEntity.productID)
+        .SQLParam('Price', oEntity.Price)
+        .SQLParam('Quant', oEntity.Quant)
+        .SQLParam('TotalItems', oEntity.TotalItems)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao inserir registros:' + ex.message);
+
+     end;
+end;
+
+
+class function TModelDAOSaleItem.New: iModelDaoEntity<TSaleItem>;
+begin
+Result := Self.Create;
+
+end;
+
+
+
+function TModelDAOSaleItem.Select(currentIndex: String; editField: String): iModelDaoEntity<TSaleItem>;
+begin
+
+  oConnection.DatasetQry.Locate(currentIndex, editField, []);
+
+end;
+
+function TModelDAOSaleItem.This: TSaleItem;
+begin
+result := oEntity;
+
+end;
+
+function TModelDAOSaleItem.Update:iModelDaoEntity<TSaleItem>;
+begin
+Result := Self;
+
+try
+
+    oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('UPDATE items SET Price= :Price ,Quant= :Quant ,TotalItems= :TotalItems ' +
+                              'WHERE SaleID = :SaleID AND productID= :productID ')
+        .SQLParam('SaleID', oEntity.SaleID)
+        .SQLParam('productID', oEntity.productID)
+        .SQLParam('Price', oEntity.Price)
+        .SQLParam('Quant', oEntity.Quant)
+        .SQLParam('TotalItems', oEntity.TotalItems)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao inserir registros:' + ex.message);
+
+     end;
+end;
+
+
+
+end.

@@ -1,0 +1,176 @@
+unit uInheritance;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  Vcl.ExtDlgs, Vcl.StdCtrls, Vcl.Buttons, Vcl.Imaging.jpeg, Vcl.ExtCtrls,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  eNum;
+
+
+type
+  TfrmInheritance = class(TForm)
+    Img: TImage;
+    lblSearch: TLabel;
+    Label3: TLabel;
+    grid: TDBGrid;
+    Label2: TLabel;
+    edtDescription: TEdit;
+    edtID: TEdit;
+    DataSource: TDataSource;
+    edtSearch: TEdit;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Shape1: TShape;
+    btnExit: TSpeedButton;
+    Panel3: TPanel;
+    Shape2: TShape;
+    btnSave: TSpeedButton;
+    Panel4: TPanel;
+    Shape3: TShape;
+    btnDelete: TSpeedButton;
+    Panel5: TPanel;
+    Shape4: TShape;
+    btnCancel: TSpeedButton;
+    Panel6: TPanel;
+    Shape5: TShape;
+    btnUpdate: TSpeedButton;
+    Panel7: TPanel;
+    Shape6: TShape;
+    btnNew: TSpeedButton;
+    procedure SpeedButton5Click(Sender: TObject);
+    procedure btnNewClick(Sender: TObject);
+    procedure btnUpdateClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnExitClick(Sender: TObject);
+  private
+    { Private declarations }
+
+    procedure ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave :TSpeedButton; Flag:Boolean);
+
+  public
+    { Public declarations }
+    EstateRegister : TEstateRegister;
+
+    function Save(estateRegister:TEstateRegister):Boolean; Virtual;
+    function Delete:Boolean; Virtual;
+
+  end;
+
+var
+
+  frmInheritance: TfrmInheritance;
+
+implementation
+
+// TAG 1 = primary key
+// TAG 2 = obligatory field
+
+{$R *.dfm}
+
+procedure TfrmInheritance.btnCancelClick(Sender: TObject);
+begin
+ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave, False);
+EstateRegister := erNull;
+end;
+
+procedure TfrmInheritance.btnDeleteClick(Sender: TObject);
+begin
+if Delete then
+  Begin
+   ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave, False);
+   EstateRegister := erNull;
+  End;
+end;
+
+procedure TfrmInheritance.btnExitClick(Sender: TObject);
+begin
+close;
+end;
+
+procedure TfrmInheritance.btnNewClick(Sender: TObject);
+begin
+ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave, True);
+EstateRegister := erNew;
+
+end;
+
+procedure TfrmInheritance.btnSaveClick(Sender: TObject);
+begin
+
+  try
+  if Save(EstateRegister) then
+    begin
+     ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave, False);
+
+    end;
+
+    finally
+    ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave, False);
+    EstateRegister := erNull;
+  end;
+end;
+
+procedure TfrmInheritance.btnUpdateClick(Sender: TObject);
+begin
+ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave, True);
+EstateRegister := erUpdate;
+end;
+
+procedure TfrmInheritance.ctrlButtons(btnNew, btnUpdate, btnCancel, btnDelete, btnSave :TSpeedButton; Flag:Boolean);
+begin
+  btnNew.Enabled    := not(Flag);;
+  btnUpdate.Enabled := not(Flag);
+  btnCancel.Enabled := Flag;
+  btnDelete.Enabled := not(Flag);
+  btnSave.Enabled   := Flag;
+end;
+
+
+
+function TfrmInheritance.Delete: Boolean;
+begin
+Result := True;
+showMessage('delete ok');
+end;
+
+procedure TfrmInheritance.FormCreate(Sender: TObject);
+begin
+  btnCancel.Click;
+
+end;
+
+function TfrmInheritance.Save(estateRegister:TEstateRegister):Boolean;
+begin
+Result := True;
+
+if estateRegister=erNew then
+  begin
+
+  showMessage('Save NEW ok');
+
+  end
+  else if estateRegister=erUpdate then
+  begin
+
+  showMessage('Save UPDATE ok');
+
+  end;
+
+
+
+end;
+
+procedure TfrmInheritance.SpeedButton5Click(Sender: TObject);
+begin
+close;
+end;
+
+end.

@@ -1,0 +1,122 @@
+unit uUsers;
+
+interface
+
+uses
+  Winapi.Windows,
+  winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.Buttons,
+  Vcl.ExtCtrls,
+  Vcl.StdCtrls,
+  Vcl.Grids,
+  Vcl.DBGrids,
+  Vcl.Imaging.jpeg,
+  Data.DB,
+  uInheritance,
+  eNum,
+  Model.DAO.Interfaces,
+  Model.DAO.Users,
+  Model.Entities.Users,
+  Model.Connections.FireDac;
+
+
+type
+  TfrmUsers = class(TfrmInheritance)
+    procedure btnNewClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnUpdateClick(Sender: TObject);
+  private
+    { Private declarations }
+    oDAO : iModelDaoEntity<TUsers>;
+
+  public
+    { Public declarations }
+    currentIndex : string;
+    function Save(estateRegister:TEstateRegister):Boolean; override;
+    function Delete:Boolean; override;
+
+
+  end;
+
+var
+  frmUsers: TfrmUsers;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmUsers.btnNewClick(Sender: TObject);
+begin
+  inherited;
+
+  oDAO.Get(currentIndex);
+  edtID.Text := IntToStr(DataSource.DataSet.FieldByName('UserID').AsInteger+1);
+  edtDescription.SetFocus;
+
+end;
+
+procedure TfrmUsers.btnUpdateClick(Sender: TObject);
+begin
+  inherited;
+
+  edtID.Text          := intToStr(DataSource.Dataset.FieldByName('UserID').asInteger);
+  edtDescription.Text := DataSource.Dataset.FieldByName('Name').asString;
+  edtDescription.setFocus;
+
+end;
+
+function TfrmUsers.Delete: Boolean;
+begin
+  if messageDlg('Delete Record?', mtConfirmation, [mbYes,mbNo], 0, mbNo) = mrYes then
+  begin
+
+  oDAO.This.UserID := DataSource.Dataset.FieldByName('UserID').asInteger;
+
+  oDAO
+  .Delete
+  .Get(currentIndex);
+
+  end;
+
+end;
+
+procedure TfrmUsers.FormCreate(Sender: TObject);
+begin
+  inherited;
+  oDao := TModelDAOUsers.New.Dataset(DataSource);
+  oDAO.Get(currentIndex);
+
+end;
+
+function TfrmUsers.Save(estateRegister: TEstateRegister): Boolean;
+begin
+
+  oDAO.This.UserID := strtoInt(edtID.Text);
+  oDAO.This.Name   := edtDescription.Text;
+
+  if (estateRegister = erNew) then
+     begin
+      if messageDlg('Insert Record?', mtConfirmation, [mbYes,mbNo], 0, mbYes) = mrYes then
+      oDAO.Insert;
+     // estateRegister:=erNull;
+     end
+  else if (estateRegister = erUpdate) then
+     begin
+      if messageDlg('Update Record?', mtConfirmation, [mbYes,mbNo], 0, mbNo) = mrYes then
+      oDAO.Update;
+     // estateRegister:=erNull;
+     end;
+
+  oDAO.Get(currentIndex);
+
+
+end;
+
+end.

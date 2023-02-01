@@ -1,0 +1,78 @@
+unit uCustomers;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Mask,
+  Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.Imaging.jpeg,
+  Vcl.ExtCtrls,
+  uInheritance,
+  eNum,
+  Model.Connections.FireDac,
+  Model.DAO.Customer,
+  Model.Entities.Customer,
+  Model.DAO.Interfaces;
+
+type
+  TfrmCustomers = class(TfrmInheritance)
+    edtLName: TEdit;
+    Label1: TLabel;
+    edtDBirth: TMaskEdit;
+    Label4: TLabel;
+    Label5: TLabel;
+    edtPostCode: TEdit;
+    edtAddress: TEdit;
+    Label6: TLabel;
+    edtAddressl2: TEdit;
+    Label7: TLabel;
+    procedure btnNewClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnUpdateClick(Sender: TObject);
+  private
+    { Private declarations }
+
+    oDAO : iModelDaoEntity<TCustomer>;
+
+  public
+    { Public declarations }
+    currentIndex : string;
+
+  end;
+
+var
+  frmCustomers: TfrmCustomers;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmCustomers.btnNewClick(Sender: TObject);
+begin
+  inherited;
+  oDAO.Get(currentIndex);
+  edtID.Text := IntToStr(DataSource.DataSet.FieldByName('categoryID').AsInteger+1);
+  edtDescription.SetFocus;
+
+end;
+
+procedure TfrmCustomers.btnUpdateClick(Sender: TObject);
+begin
+  inherited;
+
+  edtID.Text          := intToStr(DataSource.Dataset.FieldByName('customerID').asInteger);
+  edtDescription.Text := DataSource.Dataset.FieldByName('description').asString;
+  edtDescription.setFocus;
+
+end;
+
+procedure TfrmCustomers.FormCreate(Sender: TObject);
+begin
+  inherited;
+
+  oDao := TModelDAOCustomer.New.Dataset(DataSource);
+  oDAO.Get(currentIndex);
+
+end;
+
+end.

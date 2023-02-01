@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2022/10/14 15:23:36.074,=C:\WORK\DELPHI\UDEMY\Unit21.pas</Transaction>
+    <Transaction>2022/10/14 15:26:20.014,C:\WORK\WORK\DELPHI10\PROJECTS\CRUD_LinkdIN\prjBYKES.dfm=C:\WORK\DELPHI\UDEMY\Unit21.dfm</Transaction>
+    <Transaction>2022/10/14 15:26:20.014,C:\WORK\WORK\DELPHI10\PROJECTS\CRUD_LinkdIN\prjBYKES.pas=C:\WORK\DELPHI\UDEMY\Unit21.pas</Transaction>
+    <Transaction>2022/10/14 15:26:42.661,C:\WORK\WORK\DELPHI10\PROJECTS\CRUD_LinkdIN\prjMain.dproj=C:\WORK\DELPHI\UDEMY\Project20.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

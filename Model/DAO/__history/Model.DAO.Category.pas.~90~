@@ -1,0 +1,187 @@
+unit Model.DAO.Category;
+
+// Data Access Object -> DAO
+
+interface
+
+uses
+
+Data.DB,
+System.SysUtils,
+Model.Connections.FireDac,
+Model.Connections.Interfaces,
+Model.Entities.Category,
+Model.DAO.Category.Interfaces,
+eNum;
+
+
+type
+TModelDAOCategory = class(TInterfacedObject, iModelDaoEntity<TCategory>)
+
+  private
+  oConnection : iModelComponentsConnections; //TModelComponentsConnectionsFireDac;
+
+  FDataSet : TDatasource;
+  oEntity : TCategory;
+
+  public
+
+  constructor Create;
+  destructor Destroy; override;
+
+  function Get(currentIndex: String): iModelDaoEntity<TCategory>;
+
+  function Select(currentIndex: String; editField: String): iModelDaoEntity<TCategory>;
+  function Insert: iModelDaoEntity<TCategory>;
+  function Update: iModelDaoEntity<TCategory>;
+  function Delete: iModelDaoEntity<TCategory>;
+  function DataSet(aValue :TDatasource):iModelDaoEntity<TCategory>;
+  function This: TCategory;
+  class function New :iModelDaoEntity<TCategory>;
+
+  end;
+implementation
+
+uses
+  Vcl.Dialogs;
+
+
+{ TModelDAOdescription }
+
+constructor TModelDAOCategory.Create;
+begin
+oConnection := TModelComponentsConnectionsFireDac.New;
+oEntity := TCategory.Create;
+
+end;
+
+function TModelDAOCategory.DataSet(aValue: TDatasource): iModelDaoEntity<TCategory>;
+var
+arq : TextFile;
+begin
+
+Result := Self;
+FDataset := aValue;
+
+//AssignFile(arq, 'c:\work\teste.txt');
+//Rewrite(arq);
+//Writeln(arq, oConnection.DatasetQry.Name);
+//CloseFile(arq);
+
+FDataset.DataSet := oConnection.DatasetQry; //erro estava aqui//
+
+end;
+
+function TModelDAOCategory.Delete: iModelDaoEntity<TCategory>;
+begin
+Result := Self;
+
+ try
+
+     oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('DELETE FROM categories WHERE categoryID =  :categoryID')
+        .SQLParam('categoryID', oEntity.CategoryID)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao deletar registro:' + ex.message);
+     end;
+end;
+
+
+destructor TModelDAOCategory.Destroy;
+begin
+  inherited;
+
+  oEntity.disposeOf;
+end;
+
+function TModelDAOCategory.Get(currentIndex: String): iModelDaoEntity<TCategory>;
+begin
+Result := Self;
+
+    try
+
+    oConnection
+
+        .Active(false)
+        .SQLClear
+        .SQLAdd('SELECT * FROM categories ORDER BY categoryID DESC')
+        .SQLOpen;
+
+      if currentIndex<>'' then
+      oConnection.qryIndex(currentIndex);
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao abrir lista de registros:' + ex.message);
+
+     end;
+
+
+end;
+
+function TModelDAOCategory.Insert: iModelDaoEntity<TCategory>;
+begin
+Result := Self;
+
+try
+
+    oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('INSERT INTO categories (Description) VALUES (:Description)')
+        .SQLParam('Description', oEntity.Category)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao inserir registros:' + ex.message);
+
+     end;
+end;
+
+
+class function TModelDAOCategory.New: iModelDaoEntity<TCategory>;
+begin
+Result := Self.Create;
+
+end;
+
+
+
+function TModelDAOCategory.Select(currentIndex: String; editField: String): iModelDaoEntity<TCategory>;
+begin
+
+  oConnection.DatasetQry.Locate(currentIndex, editField, [loPartialkey]);
+
+end;
+
+function TModelDAOCategory.This: TCategory;
+begin
+result := oEntity;
+
+end;
+
+function TModelDAOCategory.Update:iModelDaoEntity<TCategory>;
+begin
+Result := Self;
+
+ try
+
+     oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('UPDATE categories SET description= :description WHERE categoryID = :categoryID')
+        .SQLParam('categoryID', oEntity.CategoryID)
+        .SQLParam('description', oEntity.Category)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao Atualizar registro:' + ex.message);
+
+     end;
+
+end;
+
+end.

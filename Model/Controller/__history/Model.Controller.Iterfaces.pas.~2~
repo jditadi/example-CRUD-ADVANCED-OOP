@@ -1,0 +1,21 @@
+unit Model.Controller.Iterfaces;
+
+interface
+
+uses
+Model.DAO.Interfaces,
+Model.Entities.Category;
+
+type
+  iController = interface
+  ['{EE756925-84FB-46F7-97BC-98B529793323}']
+
+  Function Category :iModelDAOEntity<TCategory>; /// uma para customers, users etc
+
+  end;
+
+implementation
+
+
+
+end.

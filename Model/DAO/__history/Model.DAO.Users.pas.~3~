@@ -1,0 +1,165 @@
+unit Model.DAO.Users;
+
+interface
+
+uses
+
+Data.DB,
+System.SysUtils,
+Model.Connections.FireDac,
+Model.Connections.Interfaces,
+Model.DAO.Interfaces,
+Model.Entities.Users;
+
+
+type
+TModelDAOUsers = class(TInterfacedObject, iModelDaoEntity<TUsers>)
+
+  private
+  oConnection : iModelComponentsConnections;
+
+  FDataSet : TDatasource;
+  oEntity : TUsers;
+
+  public
+
+  constructor Create;
+  destructor Destroy; override;
+
+  function Get(currentIndex: String): iModelDaoEntity<TUsers>;
+  function Select(currentIndex: String; editField: String): iModelDaoEntity<TUsers>;
+  function Insert: iModelDaoEntity<TUsers>;
+  function Update: iModelDaoEntity<TUsers>;
+  function Delete: iModelDaoEntity<TUsers>;
+  function DataSet(aValue :TDatasource):iModelDaoEntity<TUsers>;
+  function This: TUsers;
+  class function New :iModelDaoEntity<TUsers>;
+
+  end;
+implementation
+
+uses
+  Vcl.Dialogs;
+
+
+{ TModelDAOUsers }
+
+constructor TModelDAOUsers.Create;
+begin
+oEntity := TUsers.Create;
+oConnection := TModelComponentsConnectionsFireDac.New;
+end;
+
+function TModelDAOUsers.DataSet(aValue: TDatasource): iModelDaoEntity<TUsers>;
+begin
+Result := Self;
+FDataset := aValue;
+FDataset.DataSet := oConnection.DatasetQry;
+end;
+
+function TModelDAOUsers.Delete: iModelDaoEntity<TUsers>;
+begin
+Result := Self;
+
+ try
+
+     oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('DELETE FROM users WHERE userID =  :userID')
+        .SQLParam('userID', oEntity.userID)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao deletar registro:' + ex.message);
+     end;
+end;
+
+destructor TModelDAOUsers.Destroy;
+begin
+
+  inherited;
+  oEntity.disposeOf;
+
+end;
+
+function TModelDAOUsers.Get(currentIndex: String): iModelDaoEntity<TUsers>;
+begin
+Result := Self;
+
+    try
+
+    oConnection
+
+        .Active(false)
+        .SQLClear
+        .SQLAdd('SELECT * FROM users ORDER BY userID DESC')
+        .SQLOpen;
+
+      if currentIndex<>'' then
+      oConnection.qryIndex(currentIndex);
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao abrir lista de registros:' + ex.message);
+
+     end;
+
+end;
+
+function TModelDAOUsers.Insert: iModelDaoEntity<TUsers>;
+begin
+Result := Self;
+
+try
+
+    oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('INSERT INTO users (name) VALUES (:Name)')
+        .SQLParam('Description', oEntity.Name)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao inserir registros:' + ex.message);
+
+     end;
+
+end;
+
+class function TModelDAOUsers.New: iModelDaoEntity<TUsers>;
+begin
+Result := Self.Create;
+end;
+
+function TModelDAOUsers.Select(currentIndex,
+  editField: String): iModelDaoEntity<TUsers>;
+begin
+oConnection.DatasetQry.Locate(currentIndex, editField, [loPartialkey]);
+end;
+
+function TModelDAOUsers.This: TUsers;
+begin
+result := oEntity;
+end;
+
+function TModelDAOUsers.Update: iModelDaoEntity<TUsers>;
+begin
+Result := Self;
+
+ try
+
+     oConnection
+        .Active(false)
+        .SQLClear
+        .SQLAdd('UPDATE users SET name= :Name WHERE userId = :userID')
+        .SQLParam('userId', oEntity.UserId)
+        .SQLParam('name', oEntity.Name)
+        .ExecSQL;
+
+      except on ex:Exception do
+       raise Exception.Create('erro ao Atualizar registro:' + ex.message);
+
+     end;
+end;
+
+end.

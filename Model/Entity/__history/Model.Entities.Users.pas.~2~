@@ -1,0 +1,58 @@
+unit Model.Entities.Users;
+
+interface
+
+uses
+Datasnap.DBClient,
+Data.DB,
+System.SysUtils, System.Classes;
+
+
+type
+TCategory = class
+
+  private
+    F_userID: string;
+    F_name: Integer;
+    function getUserID: string;
+    function getName: Integer;
+
+  public
+    constructor Create();
+    destructor  Destroy; override;
+
+    Property UserID: Integer read  getUserID write F_userID;
+    Property Name:   string  read  getName   write F_name;
+
+end;
+
+implementation
+{ TCategoria }
+
+constructor TCategory.Create;
+begin
+
+end;
+
+destructor TCategory.Destroy;
+begin
+
+  inherited;
+end;
+
+function TCategory.getCategory: string;
+begin
+  if trim(F_category) = '' then
+    raise Exception.Create('informe a descricao da categoria');
+
+  Result := F_category;
+end;
+
+function TCategory.getCategoryID: Integer;
+begin
+if F_categoryID <=0 then
+    raise Exception.Create('informe o codigo da categoria');
+  Result := F_categoryID;
+end;
+
+end.

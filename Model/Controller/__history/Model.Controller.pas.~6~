@@ -1,0 +1,55 @@
+unit Model.Controller;
+
+interface
+
+uses
+Model.Controller.Iterfaces,
+Model.DAO.Category,
+Model.DAO.Interfaces,
+Model.Entities.Category;
+type
+  TController = class(TInterfacedObject, iController)
+
+  private
+  FCategory :iModelDAOEntity<TCategory>;
+
+  public
+
+    constructor Create;
+    destructor Destroy; override;
+    class function New: iController;
+    Function Category :iModelDAOEntity<TCategory>;
+
+  end;
+
+
+implementation
+
+{ TController }
+
+function TController.Category: iModelDAOEntity<TCategory>;
+begin
+  if not assigned(FCategory) then
+    FCategory := TModelDAOCategory.New;
+
+    Result := FCategory;
+
+
+end;
+
+constructor TController.Create;
+begin
+
+end;
+
+destructor TController.Destroy;
+begin
+
+end;
+
+class function TController.New: iController;
+begin
+
+end;
+
+end.

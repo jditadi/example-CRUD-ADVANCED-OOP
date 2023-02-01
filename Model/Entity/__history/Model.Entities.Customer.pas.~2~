@@ -1,0 +1,71 @@
+unit Model.Entities.Customer;
+
+
+
+interface
+
+uses
+Datasnap.DBClient,
+Data.DB,
+System.SysUtils, System.Classes;
+
+
+type
+TCustomer = class
+
+  private
+    F_customerID: Integer;
+    F_fname: string;
+    F_lname: string;
+    F_dbirth: tDateTime;
+    F_address: string;
+    F_addressl2: string;
+    F_dregister: tDateTime;
+
+    function getCustomer: string;
+    function getCustomerID: Integer;
+
+  public
+    constructor Create();
+    destructor  Destroy; override;
+
+    Property CustomerID: Integer read getCustomerID write F_customerID;
+    Property FName: String       read getFName      write F_fname;
+    Property LName: String       read getLName      write F_lname;
+    Property DBirth: tdatetime   read getDBirth     write F_dbirth;
+    Property Address: String     read getAddress    write F_address;
+    Property Addressl2: String   read Addressl2     write F_addressl2;
+    Property DRegister: String   read getDRegister  write F_dregister;
+
+end;
+
+implementation
+{ TCategoria }
+
+constructor TCustomer.Create;
+begin
+
+end;
+
+destructor TCustomer.Destroy;
+begin
+
+  inherited;
+end;
+
+function TCustomer.getCustomer: string;
+begin
+  if trim(F_Customer) = '' then
+    raise Exception.Create('informe a descricao da categoria');
+
+  Result := F_Customer;
+end;
+
+function TCustomer.getCustomerID: Integer;
+begin
+if F_CustomerID <=0 then
+    raise Exception.Create('informe o codigo da categoria');
+  Result := F_CustomerID;
+end;
+
+end.

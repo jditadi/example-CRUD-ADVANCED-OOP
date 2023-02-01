@@ -1,0 +1,84 @@
+unit Model.Entities.SalesItems;
+
+
+interface
+
+uses
+Datasnap.DBClient,
+Data.DB,
+System.SysUtils, System.Classes;
+
+
+type
+TSaleItem = class
+
+  private
+    F_SaleID: Integer;
+    F_ProductID: Integer;
+    F_Price: Double;
+    F_Quant: Double;
+    F_TotalItems: Double;
+
+    function getPrice: Double;
+    function getProductID: Integer;
+    function getQuant: Double;
+    function getSaleID: Integer;
+    function getTotalItems: Double;
+
+  public
+    constructor Create();
+    destructor  Destroy; override;
+
+
+    Property SaleID: Integer    read  getSaleID     write F_SaleID;
+    Property ProductID: Integer read  getProductID  write F_ProductID;
+    Property Price: Double      read  getPrice      write F_Price;
+    Property Quant: Double      read  getQuant      write F_Quant;
+    Property TotalItems: Double read  getTotalItems write F_TotalItems;
+
+end;
+
+implementation
+{ TCategoria }
+
+constructor TSaleItem.Create;
+begin
+
+end;
+
+destructor TSaleItem.Destroy;
+begin
+
+  inherited;
+end;
+
+
+function TSaleItem.getPrice: Double;
+begin
+  Result := F_Price;
+end;
+
+function TSaleItem.getProductID: Integer;
+begin
+  Result := F_ProductID;
+end;
+
+function TSaleItem.getQuant: Double;
+begin
+  Result := F_Quant;
+end;
+
+function TSaleItem.getSaleID: Integer;
+begin
+if F_SaleID <=0 then
+    raise Exception.Create('informe o codigo da venda');
+  Result := F_SaleID;
+end;
+
+
+function TSaleItem.getTotalItems: Double;
+begin
+  Result := F_TotalItems;
+end;
+
+end.

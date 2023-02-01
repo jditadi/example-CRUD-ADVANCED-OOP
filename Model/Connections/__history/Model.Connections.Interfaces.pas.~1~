@@ -1,0 +1,7 @@
+unit Model.Connections.Interfaces;
+
+interface
+
+implementation
+
+end.

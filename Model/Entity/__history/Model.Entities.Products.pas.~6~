@@ -1,0 +1,93 @@
+unit Model.Entities.Products;
+
+interface
+
+uses
+Datasnap.DBClient,
+Data.DB,
+System.SysUtils, System.Classes;
+
+type
+TUsers = class
+
+  private
+    F_productID: Integer;
+    F_description: String;
+    F_categoryID: Integer;
+    F_value: Double;
+    F_quant: Double;
+    function getCategoryID: Integer;
+    function getDescription: string;
+    function getName: string;
+    function getProductID: Integer;
+    function getQuant: Double;
+    function getUserID: Integer;
+    function getValue: Double;
+
+  public
+    constructor Create();
+    destructor  Destroy; override;
+
+    Property ProductID:   Integer read  getProductID   write F_productID;
+    Property Description: string  read  getDescription write F_description;
+    Property CategoryID:  Integer read  getCategoryID  write F_categoryID;
+    Property Value:       Double  read  getValue       write F_value;
+    Property Quant:       Double  read  getQuant       write F_quant;
+
+end;
+
+implementation
+{ TCategoria }
+
+constructor TUsers.Create;
+begin
+
+end;
+
+destructor TUsers.Destroy;
+begin
+
+  inherited;
+end;
+
+function TUsers.getCategoryID: Integer;
+begin
+  Result := F_categoryID;
+end;
+
+function TUsers.getDescription: string;
+begin
+  Result := F_description;
+end;
+
+function TUsers.getName: string;
+begin
+  if trim(F_name) = '' then
+    raise Exception.Create('informe o nome do usuario');
+
+  Result := F_name;
+end;
+
+function TUsers.getProductID: Integer;
+begin
+  Result := F_productID;
+end;
+
+function TUsers.getQuant: Double;
+begin
+  Result := F_quant;
+end;
+
+function TUsers.getUserID: Integer;
+begin
+if F_userID <=0 then
+    raise Exception.Create('informe o ID do usuario');
+  Result := F_userID;
+end;
+
+function TUsers.getValue: Double;
+begin
+  Result := F_value;
+end;
+
+end.

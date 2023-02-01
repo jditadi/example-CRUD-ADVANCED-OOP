@@ -1,0 +1,83 @@
+unit Model.Entities.Products;
+
+interface
+
+uses
+Datasnap.DBClient,
+Data.DB,
+System.SysUtils, System.Classes;
+
+type
+TProducts = class
+
+  private
+    F_productID: Integer;
+    F_description: String;
+    F_categoryID: Integer;
+    F_value: Double;
+    F_quant: Double;
+    function getCategoryID: Integer;
+    function getDescription: string;
+    function getProductID: Integer;
+    function getQuant: Double;
+    function getValue: Double;
+
+  public
+    constructor Create();
+    destructor  Destroy; override;
+
+    Property ProductID:   Integer read  getProductID   write F_productID;
+    Property Description: string  read  getDescription write F_description;
+    Property CategoryID:  Integer read  getCategoryID  write F_categoryID;
+    Property Value:       Double  read  getValue       write F_value;
+    Property Quant:       Double  read  getQuant       write F_quant;
+
+end;
+
+implementation
+{ TCategoria }
+
+constructor TProducts.Create;
+begin
+
+end;
+
+destructor TProducts.Destroy;
+begin
+
+  inherited;
+end;
+
+function TProducts.getCategoryID: Integer;
+begin
+  Result := F_categoryID;
+end;
+
+function TProducts.getDescription: string;
+begin
+  if trim(F_description) = '' then
+    raise Exception.Create('informe a descricao do produto');
+
+  Result := F_description;
+end;
+
+
+function TProducts.getProductID: Integer;
+begin
+if F_productID <=0 then
+    raise Exception.Create('informe o ID do product');
+  Result := F_productID;
+end;
+
+function TProducts.getQuant: Double;
+begin
+  Result := F_quant;
+end;
+
+
+function TProducts.getValue: Double;
+begin
+  Result := F_value;
+end;
+
+end.

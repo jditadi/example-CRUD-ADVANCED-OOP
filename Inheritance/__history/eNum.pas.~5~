@@ -1,0 +1,48 @@
+unit eNum;
+
+interface
+
+type
+TEstateRegister = (erNew, erUpdate, erNull);
+
+
+
+
+implementation
+
+
+function  Ret_Numero(Key: Char; Texto: string; EhDecimal: Boolean = False): Char;
+begin
+  if  not EhDecimal then
+
+    begin
+
+      { Chr(8) = Back Space }
+
+      if  not ( Key in ['0'..'9', Chr(8)] ) then
+          Key := #0
+     end
+
+  else
+     begin
+       if  Key = #46 then
+           Key := Chr(46); //DecimalSeparator;
+
+       if  not ( Key in ['0'..'9', Chr(8), Chr(46)] ) then
+           Key := #0
+
+      else
+
+        if  ( Key = Chr(46) ) and ( Pos( Key, Texto ) > 0 ) then
+            Key := #0;
+
+      ;
+
+    end;
+
+
+  Result := Key;
+
+end;
+
+end.

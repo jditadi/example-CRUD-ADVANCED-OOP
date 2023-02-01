@@ -1,0 +1,22 @@
+unit Model.Connections.Interfaces;
+
+interface
+
+type
+ iModelComponentsConnections = interface
+ ['{8EC254AE-FD20-4834-8914-033F72E91205}']
+   function Active (aValue :boolean):iModelComponentsConnections;
+//   function Dataset: TDataset;
+   function ExecSQL  :iModelComponentsConnections;
+   function SQLAdd (aValue :String) :iModelComponentsConnections;
+   function SQLClear :iModelComponentsConnections;
+   function SQLOpen  :iModelComponentsConnections;
+   function SQLParam (aParam :String; aValue :Variant ) :iModelComponentsConnections;
+
+
+end;
+
+
+implementation
+
+end.

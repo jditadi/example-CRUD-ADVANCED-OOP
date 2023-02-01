@@ -1,0 +1,27 @@
+unit Model.DAO.Interfaces;
+
+interface
+
+uses
+data.DB;
+
+
+type
+iModelDaoEntity<T> = interface ['{1E77CF16-A83F-4922-94F4-395853E234A7}']
+
+
+  function GetGen(generator: String): Integer;
+  function Get(currentIndex: String): iModelDaoEntity<T>;
+  function Select(currentIndex: String; editField: String): iModelDaoEntity<T>;
+  function Insert: iModelDaoEntity<T>;
+  function Update: iModelDaoEntity<T>;
+  function Delete: iModelDaoEntity<T>;
+  function DataSet(aValue :TDatasource):iModelDaoEntity<T>;
+  function This: T;
+
+
+end;
+
+implementation
+
+end.
